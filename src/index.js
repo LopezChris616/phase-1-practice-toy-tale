@@ -14,14 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   getToyData();
+  newToy();
 });
 
 function getToyData() {
   fetch("http://localhost:3000/toys")
     .then(resp => resp.json())
-    .then(toys => {
-      displayToys(toys);
-    })
+    .then(toys => displayToys(toys))
     .catch(err => console.error(err));
 }
 
@@ -46,4 +45,29 @@ function displayToys(toys) {
     toyCard.append(toyName, toyPicture, toyLikes, toyLikesBtn);
     toyCollection.appendChild(toyCard);
   });
+}
+
+function newToy() {
+  const submitToy = document.querySelector(".add-toy-form");
+  submitToy.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const toyData = {
+      name: event.target[0].value,
+      image: event.target[1].value,
+      likes: 0
+    }
+
+    fetch("http://localhost:3000/toys", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(toyData)
+    })
+    .then(resp => resp.json())
+    .then(toy => console.log(toy))
+    .catch(err => console.log(err));
+  })
 }
