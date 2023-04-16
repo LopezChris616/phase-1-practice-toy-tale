@@ -20,31 +20,27 @@ document.addEventListener("DOMContentLoaded", () => {
 function getToyData() {
   fetch("http://localhost:3000/toys")
     .then(resp => resp.json())
-    .then(toys => displayToys(toys))
-    .catch(err => console.error(err));
+    .then(toys => toys.forEach(toys => displayToys(toys)))
+    .catch(err => console.log(err));
 }
 
-function displayToys(toys) {
-  const toysArr = [...toys];
+function displayToys(toy) {
+  const toyCard = document.createElement("div");
+  const toyName = document.createElement("h2");
+  const toyPicture = document.createElement("img");
+  const toyLikes = document.createElement("p");
+  const toyLikesBtn = document.createElement("button");
+  const toyCollection = document.getElementById("toy-collection");
 
-  toysArr.forEach(toy => {
-    const toyCard = document.createElement("div");
-    const toyName = document.createElement("h2");
-    const toyPicture = document.createElement("img");
-    const toyLikes = document.createElement("p");
-    const toyLikesBtn = document.createElement("button");
-    const toyCollection = document.getElementById("toy-collection");
+  toyCard.classList.add("card");
+  toyPicture.classList.add("toy-avatar");
+  toyName.textContent = toy.name;
+  toyPicture.setAttribute("src", toy.image);
+  toyLikes.textContent = `${toy.likes} likes`;
+  toyLikesBtn.textContent = "Like ❤️";
 
-    toyCard.classList.add("card");
-    toyPicture.classList.add("toy-avatar");
-    toyName.textContent = toy.name;
-    toyPicture.setAttribute("src", toy.image);
-    toyLikes.textContent = `${toy.likes} likes`;
-    toyLikesBtn.textContent = "Like ❤️";
-  
-    toyCard.append(toyName, toyPicture, toyLikes, toyLikesBtn);
-    toyCollection.appendChild(toyCard);
-  });
+  toyCard.append(toyName, toyPicture, toyLikes, toyLikesBtn);
+  toyCollection.appendChild(toyCard);
 }
 
 function newToy() {
@@ -58,6 +54,8 @@ function newToy() {
       likes: 0
     }
 
+    displayToys(toyData);
+
     fetch("http://localhost:3000/toys", {
       method: "POST",
       headers: {
@@ -66,8 +64,8 @@ function newToy() {
       },
       body: JSON.stringify(toyData)
     })
-    .then(resp => resp.json())
-    .then(toy => console.log(toy))
-    .catch(err => console.log(err));
-  })
+      .then(resp => resp.json())
+      .then(toy => console.log(toy))
+      .catch(err => console.log(err))
+  });
 }
