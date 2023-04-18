@@ -31,8 +31,6 @@ function displayToys(toy) {
   const toyLikesBtn = document.createElement("button");
   const toyCollection = document.getElementById("toy-collection");
 
-  toyCard.id = toy.id;
-
   toyCard.classList.add("card");
   toyPicture.classList.add("toy-avatar");
   toyName.textContent = toy.name;
